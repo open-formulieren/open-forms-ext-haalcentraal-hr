@@ -1,18 +1,20 @@
 
-
-Welcome to prefill_haalcentraalhr's documentation!
-=================================================
+=============================================
+Open Forms extension Haal centraal HR prefill
+=============================================
 
 :Version: 0.1.0
 :Source: https://github.com/open-formulieren/open-forms-ext-haalcentraal-hr
 :Keywords: Open Forms Extension, Haal Centraal HR
-:PythonVersion: 3.9
+:PythonVersion: 3.10
 
 |build-status| |code-quality| |black| |coverage| |docs|
 
 |python-versions| |django-versions| |pypi-version|
 
-<One liner describing the project>
+Open Forms extension to prefill form fields with data coming from the `Haal Centraal HR API`_.
+
+.. _Haal Centraal HR API: https://app.swaggerhub.com/apis/DH-Sandbox/handelsregister/1.3.0
 
 .. contents::
 
@@ -21,8 +23,13 @@ Welcome to prefill_haalcentraalhr's documentation!
 Features
 ========
 
-* ...
-* ...
+* Configuration in the admin for the Haal Centraal service
+* The Haal Centraal client performs the token exchange with Keycloak
+* Retrieve prefill data from the ``MaatschappelijkeActiviteitRaadplegen`` API endpoint based on KvK number.
+
+.. note::
+
+   The Haal Centraal HR API is a Den Haag specific API and not a national Dutch standard.
 
 Installation
 ============
@@ -35,27 +42,32 @@ Requirements
 * Django 3.2 or newer
 
 
-Install
--------
-
-.. code-block:: bash
-
-    pip install prefill_haalcentraalhr
-
-
 Usage
 =====
 
-<document or refer to docs>
+For an explanation of this how this extension works, look at the Open Forms `developer documentation`_.
 
-Local development
-=================
+To see how to build and distribute an image with this extension, look at the Open Forms documentation about
+`building and distributing extensions`_.
 
-To install and develop the library locally, use::
+.. _developer documentation: https://open-forms.readthedocs.io/en/latest/developers/extensions.html#keycloak-token-exchange-extension
+.. _building and distributing extensions: https://open-forms.readthedocs.io/en/latest/developers/extensions.html#keycloak-token-exchange-extension
 
-.. code-block:: bash
 
-    pip install -e .[tests,coverage,docs,pep8,release]
+Configuration
+=============
+
+In the Open Forms Admin:
+
+* Go to **Configuration** > **Services** and create a service for Haal Centraal HR.
+* Go to **Miscellaneous** > **Token exchange plugin configurations**.
+  Click on **Add Token exchange plugin configuration** and fill in the details:
+
+  * Select the service for which you want the token authorisation to be performed.
+  * Add the Keycloak audience.
+
+  Save the configuration.
+* The prefill will be available in the form designer in the same way as other prefill plugins.
 
 
 .. |build-status| image:: https://github.com/open-formulieren/open-forms-ext-haalcentraal-hr/workflows/Run%20CI/badge.svg
