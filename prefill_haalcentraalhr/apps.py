@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class HaalCentraalHRApp(AppConfig):
-    name = "openforms.prefill.contrib.haalcentraal_hr"
-    label = "prefill_haalcentraal_hr"
+    name = "prefill_haalcentraalhr"
+    label = "prefill_haalcentraalhr"
     verbose_name = _("Haal Centraal HR")
 
     def ready(self):

@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from openforms.authentication.constants import AuthAttribute
 from openforms.registrations.contrib.zgw_apis.tests.factories import ServiceFactory
@@ -35,6 +35,7 @@ class HaalCentraalHRPluginTests(TestCase):
         self.assertEqual(data, {})
 
     @Mocker()
+    @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
     def test_happy_flow(self, m):
         mock_service_oas_get(
             m,
@@ -60,7 +61,7 @@ class HaalCentraalHRPluginTests(TestCase):
         )
 
         with patch(
-            "openforms.prefill.contrib.haalcentraal_hr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(service=service),
         ):
             data = plugin.get_prefill_values(
