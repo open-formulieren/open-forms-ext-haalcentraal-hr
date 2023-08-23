@@ -66,12 +66,7 @@ jobs:
           export OPEN_FORMS_EXTENSIONS=prefill_haalcentraalhr
 
           python src/manage.py compilemessages
-          coverage run \
-          --concurrency=multiprocessing \
-          --parallel-mode \
-          src/manage.py test prefill_haalcentraalhr \
-            --parallel 2 \
-            --verbosity 2
+          coverage run src/manage.py test prefill_haalcentraalhr
           coverage combine
         env:
           DJANGO_SETTINGS_MODULE: openforms.conf.ci
