@@ -66,7 +66,7 @@ jobs:
           export OPEN_FORMS_EXTENSIONS=prefill_haalcentraalhr
 
           python src/manage.py compilemessages
-          coverage run src/manage.py test prefill_haalcentraalhr
+          coverage run --source=prefill_haalcentraalhr src/manage.py test prefill_haalcentraalhr
           coverage combine
         env:
           DJANGO_SETTINGS_MODULE: openforms.conf.ci
@@ -74,6 +74,11 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: ''
         working-directory: ${{ github.workspace }}/open-forms
+
+      - name: Publish coverage report
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ${{ github.workspace }}/open-forms
 
   docker_build:
     name: Build Docker image
