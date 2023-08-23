@@ -4,11 +4,13 @@ from django.utils.translation import gettext_lazy as _
 
 from glom import GlomError, glom
 from openforms.authentication.constants import AuthAttribute
+from openforms.plugins.exceptions import InvalidPluginConfiguration
 from openforms.prefill.base import BasePlugin
 from openforms.prefill.constants import IdentifierRoles
 from openforms.prefill.registry import register
 from openforms.submissions.models import Submission
 from openforms.typing import JSONObject
+from zds_client import ClientError
 
 from .constants import Attributes
 from .models import HaalCentraalHRConfig
@@ -94,3 +96,29 @@ class HaalCentraalHRPrefill(BasePlugin):
             return {}
 
         return self.extract_requested_attributes(attributes, data)
+
+    def check_config(self) -> None:
+        config = HaalCentraalHRConfig.get_solo()
+
+        if not config.service:
+            raise InvalidPluginConfiguration(_("Service not selected"))
+
+        haal_centraal_hr_client = config.build_client()
+
+        kvk_value = "TEST"
+        try:
+            haal_centraal_hr_client.retrieve(
+                "RaadpleegMaatschappelijkeActiviteitOpKvKnummer",
+                url=f"maatschappelijkeactiviteiten/{kvk_value}",
+                request_kwargs={
+                    "headers": {
+                        "Accept": "application/hal+json",
+                    },
+                },
+            )
+        except ClientError as exc:
+            if exc.args[0].get("status") == 400:
+                return
+            raise InvalidPluginConfiguration(
+                _("Client error: {exception}").format(exception=exc)
+            )
