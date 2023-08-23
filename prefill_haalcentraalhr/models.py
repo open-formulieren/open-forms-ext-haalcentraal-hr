@@ -9,6 +9,11 @@ from zgw_consumers.constants import APITypes
 logger = logging.getLogger(__name__)
 
 
+class HaalCentraalHRConfigManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("service")
+
+
 class HaalCentraalHRConfig(SingletonModel):
     """Configuration for the Haal Centraal HR Prefill"""
 
@@ -20,6 +25,8 @@ class HaalCentraalHRConfig(SingletonModel):
         related_name="+",
         null=True,
     )
+
+    objects = HaalCentraalHRConfigManager()
 
     class Meta:
         verbose_name = _("Haal Centraal HR configuration")
