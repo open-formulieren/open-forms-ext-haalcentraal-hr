@@ -72,6 +72,10 @@ class HaalCentraalHRPrefill(BasePlugin):
         config = HaalCentraalHRConfig.get_solo()
 
         haal_centraal_hr_client = config.build_client()
+        if haal_centraal_hr_client is None:
+            logger.exception("Haal Centraal HR service not configured.")
+            return {}
+
         try:
             data = haal_centraal_hr_client.retrieve(
                 "RaadpleegMaatschappelijkeActiviteitOpKvKnummer",
