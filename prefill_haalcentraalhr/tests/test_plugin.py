@@ -34,6 +34,23 @@ class HaalCentraalHRPluginTests(TestCase):
 
         self.assertEqual(data, {})
 
+    def test_no_service_configured(self):
+        plugin = HaalCentraalHRPrefill("haalcentraal_hr")
+        submission = SubmissionFactory.create(
+            auth_info__attribute=AuthAttribute.kvk, auth_info__value="111222333"
+        )
+
+        with patch(
+            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            return_value=HaalCentraalHRConfig(),
+        ):
+            data = plugin.get_prefill_values(
+                submission,
+                ["kvkNummer", "heeftAlsEigenaar.natuurlijkPersoon.burgerservicenummer"],
+            )
+
+        self.assertEqual(data, {})
+
     @Mocker()
     @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
     def test_happy_flow(self, m):
