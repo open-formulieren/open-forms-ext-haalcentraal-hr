@@ -75,7 +75,6 @@ class HaalCentraalHRPrefill(BasePlugin):
         try:
             data = haal_centraal_hr_client.retrieve(
                 "RaadpleegMaatschappelijkeActiviteitOpKvKnummer",
-                burgerservicenummer=kvk_value,
                 url=f"maatschappelijkeactiviteiten/{kvk_value}",
                 request_kwargs={
                     "headers": {
