@@ -81,8 +81,8 @@ In the Open Forms Admin:
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 
-.. |coverage| image:: https://codecov.io/gh/maykinmedia/prefill_haalcentraalhr/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/maykinmedia/prefill_haalcentraalhr
+.. |coverage| image:: https://codecov.io/github/open-formulieren/open-forms-ext-haalcentraal-hr/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/open-formulieren/open-forms-ext-haalcentraal-hr
     :alt: Coverage status
 
 .. |docs| image:: https://readthedocs.org/projects/prefill_haalcentraalhr/badge/?version=latest
