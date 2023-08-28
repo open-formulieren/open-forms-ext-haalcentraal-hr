@@ -89,9 +89,9 @@ In the Open Forms Admin:
     :target: https://prefill_haalcentraalhr.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. |python-versions| image:: https://img.shields.io/pypi/pyversions/prefill_haalcentraalhr.svg
+.. |python-versions| image:: https://img.shields.io/pypi/pyversions/open-forms-ext-haalcentraal-hr.svg
 
-.. |django-versions| image:: https://img.shields.io/pypi/djversions/prefill_haalcentraalhr.svg
+.. |django-versions| image:: https://img.shields.io/pypi/djversions/open-forms-ext-haalcentraal-hr.svg
 
-.. |pypi-version| image:: https://img.shields.io/pypi/v/prefill_haalcentraalhr.svg
-    :target: https://pypi.org/project/prefill_haalcentraalhr/
+.. |pypi-version| image:: https://img.shields.io/pypi/v/open-forms-ext-haalcentraal-hr.svg
+    :target: https://pypi.org/project/open-forms-ext-haalcentraal-hr/
