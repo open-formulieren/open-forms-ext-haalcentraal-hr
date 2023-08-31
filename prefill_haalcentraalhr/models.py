@@ -33,7 +33,9 @@ class HaalCentraalHRConfig(SingletonModel):
     class Meta:
         verbose_name = _("Haal Centraal HR configuration")
 
-    def build_client(self, submission: Submission = None) -> PreRequestZGWClient | None:
+    def build_client(
+        self, submission: Submission | None = None
+    ) -> PreRequestZGWClient | None:
         if not self.service:
             logger.info("No service configured for Haal Centraal HR.")
             return
