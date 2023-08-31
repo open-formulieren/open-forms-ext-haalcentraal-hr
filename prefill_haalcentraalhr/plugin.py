@@ -73,7 +73,7 @@ class HaalCentraalHRPrefill(BasePlugin):
 
         config = HaalCentraalHRConfig.get_solo()
 
-        haal_centraal_hr_client = config.build_client()
+        haal_centraal_hr_client = config.build_client(submission=submission)
         if haal_centraal_hr_client is None:
             logger.exception("Haal Centraal HR service not configured.")
             return {}

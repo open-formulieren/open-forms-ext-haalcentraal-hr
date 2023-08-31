@@ -63,7 +63,7 @@ class HaalCentraalHRPluginTests(TestCase):
             oas_url="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
         )
 
-        with open(FILES_DIR / "maatschapplelijkeactiviteiten-response.json", "rb") as f:
+        with open(FILES_DIR / "maatschappelijkeactiviteiten-response.json", "rb") as f:
             m.get(
                 "http://haalcentraal-hr.nl/api/maatschappelijkeactiviteiten/111222333",
                 json=json.load(f),
