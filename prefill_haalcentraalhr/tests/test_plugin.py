@@ -6,11 +6,10 @@ from django.test import TestCase, override_settings
 
 from openforms.authentication.constants import AuthAttribute
 from openforms.plugins.exceptions import InvalidPluginConfiguration
-from openforms.registrations.contrib.zgw_apis.tests.factories import ServiceFactory
 from openforms.submissions.tests.factories import SubmissionFactory
 from requests_mock import Mocker
 from zgw_consumers.constants import APITypes
-from zgw_consumers.test import mock_service_oas_get
+from zgw_consumers_ext.tests.factories import ServiceFactory
 
 from ..models import HaalCentraalHRConfig
 from ..plugin import HaalCentraalHRPrefill
@@ -43,7 +42,7 @@ class HaalCentraalHRPluginTests(TestCase):
         )
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(),
         ):
             data = plugin.get_prefill_values(
@@ -56,13 +55,6 @@ class HaalCentraalHRPluginTests(TestCase):
     @Mocker()
     @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
     def test_happy_flow(self, m):
-        mock_service_oas_get(
-            m,
-            url="http://haalcentraal-hr.nl/api/",
-            service="haalcentraal-hr-oas",
-            oas_url="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
-        )
-
         with open(FILES_DIR / "maatschappelijkeactiviteiten-response.json", "rb") as f:
             m.get(
                 "http://haalcentraal-hr.nl/api/maatschappelijkeactiviteiten/111222333",
@@ -80,7 +72,7 @@ class HaalCentraalHRPluginTests(TestCase):
         )
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(service=service),
         ):
             data = plugin.get_prefill_values(
@@ -97,13 +89,6 @@ class HaalCentraalHRPluginTests(TestCase):
     @Mocker()
     @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
     def test_check_config_happy_flow(self, m):
-        mock_service_oas_get(
-            m,
-            url="http://haalcentraal-hr.nl/api/",
-            service="haalcentraal-hr-oas",
-            oas_url="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
-        )
-
         m.get(
             "http://haalcentraal-hr.nl/api/maatschappelijkeactiviteiten/TEST",
             status_code=400,
@@ -123,7 +108,7 @@ class HaalCentraalHRPluginTests(TestCase):
         )
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(service=service),
         ):
             plugin.check_config()
@@ -131,13 +116,6 @@ class HaalCentraalHRPluginTests(TestCase):
     @Mocker()
     @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
     def test_check_config_wrong_response(self, m):
-        mock_service_oas_get(
-            m,
-            url="http://haalcentraal-hr.nl/api/",
-            service="haalcentraal-hr-oas",
-            oas_url="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
-        )
-
         m.get(
             "http://haalcentraal-hr.nl/api/maatschappelijkeactiviteiten/TEST",
             status_code=403,
@@ -152,7 +130,7 @@ class HaalCentraalHRPluginTests(TestCase):
         )
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(service=service),
         ):
             with self.assertRaises(
@@ -165,7 +143,7 @@ class HaalCentraalHRPluginTests(TestCase):
         plugin = HaalCentraalHRPrefill("haalcentraal_hr")
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(),
         ):
             with self.assertRaises(
