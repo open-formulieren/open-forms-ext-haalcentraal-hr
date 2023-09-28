@@ -2,9 +2,11 @@ import logging
 
 from django.utils.translation import gettext_lazy as _
 
+import requests
 from glom import GlomError, glom
 from openforms.authentication.constants import AuthAttribute
 from openforms.plugins.exceptions import InvalidPluginConfiguration
+from openforms.pre_requests.clients import PreRequestClientContext
 from openforms.prefill.base import BasePlugin
 from openforms.prefill.constants import IdentifierRoles
 from openforms.prefill.registry import register
@@ -12,14 +14,10 @@ from openforms.submissions.models import Submission
 from openforms.typing import JSONObject
 from zds_client import ClientError
 
+from .client import NoServiceConfigured, get_client
 from .constants import Attributes
-from .models import HaalCentraalHRConfig
 
 logger = logging.getLogger(__name__)
-
-
-class HaalCentraalHRZGWClientError(Exception):
-    pass
 
 
 @register("haalcentraal_hr")
@@ -71,53 +69,39 @@ class HaalCentraalHRPrefill(BasePlugin):
         if not (kvk_value := self.get_identifier_value(submission, identifier_role)):
             return {}
 
-        config = HaalCentraalHRConfig.get_solo()
-
-        haal_centraal_hr_client = config.build_client(submission=submission)
-        if haal_centraal_hr_client is None:
+        context = PreRequestClientContext(submission=submission)
+        try:
+            haal_centraal_hr_client = get_client(context=context)
+        except NoServiceConfigured:
             logger.exception("Haal Centraal HR service not configured.")
             return {}
 
         try:
-            data = haal_centraal_hr_client.retrieve(
-                "RaadpleegMaatschappelijkeActiviteitOpKvKnummer",
-                url=f"maatschappelijkeactiviteiten/{kvk_value}",
-                request_kwargs={
-                    "headers": {
-                        "Accept": "application/hal+json",
-                    },
-                },
-            )
-        except HaalCentraalHRZGWClientError as e:
+            with haal_centraal_hr_client:
+                response = haal_centraal_hr_client.get(
+                    f"maatschappelijkeactiviteiten/{kvk_value}"
+                )
+                response.raise_for_status()
+        except requests.RequestException as exc:
             logger.exception(
-                "Exception while making request to Haal Centraal HR", exc_info=e
+                "Exception while making request to Haal Centraal HR", exc_info=exc
             )
             return {}
 
+        data = response.json()
         return self.extract_requested_attributes(attributes, data)
 
     def check_config(self) -> None:
-        config = HaalCentraalHRConfig.get_solo()
-
-        if not config.service:
-            raise InvalidPluginConfiguration(_("Service not selected"))
-
-        haal_centraal_hr_client = config.build_client()
-
         kvk_value = "TEST"
         try:
-            haal_centraal_hr_client.retrieve(
-                "RaadpleegMaatschappelijkeActiviteitOpKvKnummer",
-                url=f"maatschappelijkeactiviteiten/{kvk_value}",
-                request_kwargs={
-                    "headers": {
-                        "Accept": "application/hal+json",
-                    },
-                },
-            )
-        except ClientError as exc:
-            if exc.args[0].get("status") == 400:
+            with get_client() as client:
+                response = client.get(f"maatschappelijkeactiviteiten/{kvk_value}")
+                response.raise_for_status()
+        except NoServiceConfigured as exc:
+            raise InvalidPluginConfiguration(_("Service not selected")) from exc
+        except requests.RequestException as exc:
+            if (response := exc.response) is not None and response.status_code == 400:
                 return
             raise InvalidPluginConfiguration(
                 _("Client error: {exception}").format(exception=exc)
-            )
+            ) from exc
