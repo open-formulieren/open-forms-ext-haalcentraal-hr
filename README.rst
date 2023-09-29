@@ -3,7 +3,7 @@
 Open Forms extension Haal centraal HR prefill
 =============================================
 
-:Version: 0.1.1
+:Version: 0.2.0
 :Source: https://github.com/open-formulieren/open-forms-ext-haalcentraal-hr
 :Keywords: Open Forms Extension, Haal Centraal HR
 :PythonVersion: 3.10
