@@ -9,13 +9,12 @@ from django.test import TestCase, override_settings
 from openforms.authentication.constants import AuthAttribute
 from openforms.pre_requests.base import PreRequestHookBase
 from openforms.pre_requests.registry import Registry
-from openforms.registrations.contrib.zgw_apis.tests.factories import ServiceFactory
 from openforms.submissions.models import Submission
 from openforms.submissions.tests.factories import SubmissionFactory
 from requests.auth import AuthBase
 from requests_mock import Mocker
 from zgw_consumers.constants import APITypes
-from zgw_consumers.test import mock_service_oas_get
+from zgw_consumers_ext.tests.factories import ServiceFactory
 
 from ..models import HaalCentraalHRConfig
 from ..plugin import HaalCentraalHRPrefill
@@ -51,13 +50,6 @@ class TokenExchangePreRequestHookTest(PreRequestHookBase):
 @override_settings(ZGW_CONSUMERS_TEST_SCHEMA_DIRS=[FILES_DIR])
 class HaalCentraalHRPluginWithTokenExchangeTests(TestCase):
     def test_token_exchange(self, m):
-        mock_service_oas_get(
-            m,
-            url="http://haalcentraal-hr.nl/api/",
-            service="haalcentraal-hr-oas",
-            oas_url="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
-        )
-
         with open(FILES_DIR / "maatschappelijkeactiviteiten-response.json", "rb") as f:
             m.get(
                 "http://haalcentraal-hr.nl/api/maatschappelijkeactiviteiten/111222333",
@@ -82,7 +74,7 @@ class HaalCentraalHRPluginWithTokenExchangeTests(TestCase):
         )
 
         with patch(
-            "prefill_haalcentraalhr.plugin.HaalCentraalHRConfig.get_solo",
+            "prefill_haalcentraalhr.client.HaalCentraalHRConfig.get_solo",
             return_value=HaalCentraalHRConfig(service=service),
         ), patch(
             "openforms.pre_requests.clients.registry",
