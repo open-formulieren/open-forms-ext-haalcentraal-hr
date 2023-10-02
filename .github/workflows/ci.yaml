@@ -39,7 +39,7 @@ jobs:
         with:
           repository: open-formulieren/open-forms
           path: open-forms
-          ref: refactor/3489-zgw-and-objects-api
+          ref: master
 
       - name: Checkout Haal Centraal HR extension
         uses: actions/checkout@v3
