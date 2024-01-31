@@ -14,7 +14,7 @@ from openforms.submissions.tests.factories import SubmissionFactory
 from requests.auth import AuthBase
 from requests_mock import Mocker
 from zgw_consumers.constants import APITypes
-from zgw_consumers_ext.tests.factories import ServiceFactory
+from zgw_consumers.test.factories import ServiceFactory
 
 from ..models import HaalCentraalHRConfig
 from ..plugin import HaalCentraalHRPrefill
