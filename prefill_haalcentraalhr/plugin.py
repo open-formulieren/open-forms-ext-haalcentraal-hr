@@ -12,7 +12,6 @@ from openforms.prefill.constants import IdentifierRoles
 from openforms.prefill.registry import register
 from openforms.submissions.models import Submission
 from openforms.typing import JSONObject
-from zds_client import ClientError
 
 from .client import NoServiceConfigured, get_client
 from .constants import Attributes
