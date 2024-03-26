@@ -7,43 +7,27 @@ on:
       - main
     tags:
       - '*'
-    paths:
-      - '**.py'
   pull_request:
-    paths:
-      - '**.py'
   workflow_dispatch:
 
 jobs:
-  isort:
-    name: Check import sorting
+  linting:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.10', '3.12']
+        toxenv: [isort, black, flake8]
+
+    name: "Code style: ${{ matrix.toxenv }}, py${{ matrix.python }}"
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python }}
       - name: Install dependencies
-        run: |
-          pip install isort
-      - uses: isort/isort-action@v1.1.0
-        with:
-          sort-paths: 'prefill_haalcentraalhr tests'
-          configuration: '--check-only --diff'
+        run: pip install tox tox-gh-actions tox-uv
 
-  black:
-    name: Check code formatting with black
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: |
-          pip install black
-      - name: Run black
-        run: |
-          black --check prefill_haalcentraalhr tests
+      - run: tox
+        env:
+          TOXENV: ${{ matrix.toxenv }}
