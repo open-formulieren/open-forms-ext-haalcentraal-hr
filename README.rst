@@ -3,7 +3,7 @@
 Open Forms extension Haal centraal HR prefill
 =============================================
 
-:Version: 0.3.0
+:Version: 0.3.1
 :Source: https://github.com/open-formulieren/open-forms-ext-haalcentraal-hr
 :Keywords: Open Forms Extension, Haal Centraal HR
 :PythonVersion: 3.10
@@ -38,7 +38,7 @@ Requirements
 ------------
 
 * Python 3.8 or above
-* setuptools 30.3.0 or above
+* setuptools 30.3.1 or above
 * Django 3.2 or newer
 
 
