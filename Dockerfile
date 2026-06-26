@@ -1,5 +1,5 @@
 # Stage 1 - Build the environment for the Haal centraal HR prefill
-FROM python:3.10-slim-bullseye AS prefill-haalcentraalhr-build
+FROM python:3.12-slim-bookworm AS prefill-haalcentraalhr-build
 
 WORKDIR /app
 
