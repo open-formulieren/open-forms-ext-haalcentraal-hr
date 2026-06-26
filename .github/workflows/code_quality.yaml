@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ['3.10', '3.12']
+        python: ['3.12']
         toxenv: [isort, black, flake8]
 
     name: "Code style: ${{ matrix.toxenv }}, py${{ matrix.python }}"
