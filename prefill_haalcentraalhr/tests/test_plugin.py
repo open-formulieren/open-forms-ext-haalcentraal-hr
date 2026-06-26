@@ -68,7 +68,6 @@ class HaalCentraalHRPluginTests(TestCase):
         service = ServiceFactory.create(
             api_type=APITypes.orc,
             api_root="http://haalcentraal-hr.nl/api/",
-            oas="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
         )
 
         with patch(
@@ -104,7 +103,6 @@ class HaalCentraalHRPluginTests(TestCase):
         service = ServiceFactory.create(
             api_type=APITypes.orc,
             api_root="http://haalcentraal-hr.nl/api/",
-            oas="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
         )
 
         with patch(
@@ -126,7 +124,6 @@ class HaalCentraalHRPluginTests(TestCase):
         service = ServiceFactory.create(
             api_type=APITypes.orc,
             api_root="http://haalcentraal-hr.nl/api/",
-            oas="https://haalcentraal-hr.nl/api/schema/openapi.yaml",
         )
 
         with patch(
